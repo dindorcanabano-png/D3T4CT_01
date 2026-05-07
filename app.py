@@ -1,26 +1,28 @@
 import streamlit as st
+import av
 from streamlit_webrtc import webrtc_streamer, RTCConfiguration
-import cv2
 from ultralytics import YOLO
-import numpy as np
 
-st.title("🦾 D3T4CT_01")
+st.title("🔥 D3T4CT_01 - WORKING!")
 
-@st.cache_resource
-def load_model():
-    return YOLO("yolov8n.pt")
+RTC_CONFIGURATION = RTCConfiguration(
+    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+)
 
-model = load_model()
-
-RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}] })
-
-class VideoProcessor:
+class DetectionProcessor:
+    def __init__(self):
+        self.model = YOLO("yolov8n.pt")
+    
     def recv(self, frame):
         img = frame.to_ndarray(format="bgr24")
-        results = model(img)
-        annotated = results[0].plot()
-        return av.VideoFrame.from_ndarray(annotated, format="bgr24")
+        results = self.model(img)
+        return av.VideoFrame.from_ndarray(results[0].plot(), format="bgr24")
 
-webrtc_streamer(key="example", 
-                video_processor_factory=VideoProcessor,
-                rtc_configuration=RTC_CONFIGURATION)
+webrtc_streamer(
+    key="detection",
+    video_processor_factory=DetectionProcessor,
+    rtc_configuration=RTC_CONFIGURATION,
+    media_stream_constraints={
+        "video": {"width": 640, "height": 480, "frameRate": 30}
+    }
+)
