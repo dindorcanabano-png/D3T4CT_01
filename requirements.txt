@@ -8,3 +8,4 @@ torch
 torchvision
 tornado==6.4
 twilio
+Pillow==10.4.0 --only-binary=all  # Force pre-compiled wheel
