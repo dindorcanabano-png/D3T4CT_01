@@ -4,8 +4,7 @@ ultralytics==8.3.15
 opencv-python-headless==4.10.0.84
 av==13.0.1
 numpy==1.26.4
-torch==2.4.1+cpu
-torchvision==0.19.1+cpu
+torch==2.4.1+cpu torchvision==0.19.1+cpu --index-url https://download.pytorch.org/whl/cpu
 tornado==6.4
 twilio==9.3.3
 Pillow==10.3.0
